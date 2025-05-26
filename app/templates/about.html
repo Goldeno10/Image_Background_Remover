@@ -1,0 +1,74 @@
+{# app/templates/about.html #}
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Hero -->
+    <div class="text-center mb-5">
+        <h1 class="display-5 text-accent">About MIBTech BG-Remover</h1>
+        <p class="lead ">
+            We make background removal lightning-fast, reliable, and at your fingertips.
+        </p>
+    </div>
+
+    <!-- Features -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card about-card p-4 text-center h-100">
+                <i class="fa-solid fa-bolt fa-2x mb-3 text-accent"></i>
+                <h4>Super Fast</h4>
+                <p>Processing in seconds thanks to optimized models.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card about-card p-4 text-center h-100">
+                <i class="fa-solid fa-shield-halved fa-2x mb-3 text-accent"></i>
+                <h4>Secure &amp; Private</h4>
+                <p>Your images never leave our servers and are auto-deleted after 24 hrs.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card about-card p-4 text-center h-100">
+                <i class="fa-solid fa-code fa-2x mb-3 text-accent"></i>
+                <h4>Developer Friendly</h4>
+                <p>Use our REST API or drop-in UI—fully documented with code snippets.</p>
+            </div>
+        </div>
+    </div>
+
+    <hr class="border-secondary" />
+
+    <!-- About Me -->
+    <section class="about-me d-flex flex-column flex-md-row align-items-center text-center text-md-start">
+        <!-- Photo -->
+        <div class="me-photo mb-4 mb-md-0">
+            <img src="/static/images/MIBTech_no_BG.png" alt="Muhammad Ibrahim"
+                class="rounded-circle border border-2 border-accent" width="150" height="150">
+        </div>
+
+        <!-- Bio -->
+        <div class="me-bio ps-md-4">
+            <h2 class="text-accent">Muhammad Ibrahim</h2>
+            <p class="text-light mb-2"><em>Software Engineer &amp; Creator of BG-Remover</em></p>
+            <p class="mb-3">
+                Hi! I’m Muhammad, a full-stack software engineer passionate about AI powered solutions and
+                building delightful developer tools and micro services. When I’m not coding, you’ll find me
+                experimenting with reading or playing football.
+            </p>
+
+            <!-- Social Links -->
+            <div class="social-links">
+                <a href="https://github.com/Goldeno10" target="_blank" class="me-3 text-light">
+                    <i class="fab fa-github fa-lg"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/muhammad-ib" target="_blank" class="me-3 text-light">
+                    <i class="fab fa-linkedin fa-lg"></i>
+                </a>
+                <a href="mailto:ibrahimmuhammad271@gmail.com" class="text-light">
+                    <i class="fa-solid fa-envelope fa-lg"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

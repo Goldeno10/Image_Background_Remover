@@ -33,12 +33,12 @@ class Settings(BaseSettings):
     DEFAULT_SCALE: float = os.getenv("DEFAULT_SCALE", 1.0)
 
 
-    ENV: str = "development"  # or "production"
+    ENV: str = "production" # or "development"
     OUTPUT_DIR: str = "./output"
     
-    AWS_S3_BUCKET: str = "your-bucket-name"
-    AWS_REGION: str = "eu-north-1"
-    USE_S3: bool = False
+    AWS_S3_BUCKET: str = os.getenv("AWS_S3_BUCKET", "your-s3-bucket-name")
+    AWS_REGION: str = os.getenv("AWS_REGION", "eu-north-1")
+    USE_S3: bool = os.getenv("USE_S3", "false").lower() == "true"
 
     class Config:
         env_file = ".env"

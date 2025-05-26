@@ -19,7 +19,6 @@ class Settings(BaseSettings):
     SMTP_PASSWORD: str = os.getenv("SMTP_PASSWORD", "nyxb zwua duqm pxgb")
 
     # App
-    BASE_URL: AnyHttpUrl = os.getenv("BASE_URL", "http://localhost:8000")
     OUTPUT_DIR: str = os.getenv("OUTPUT_DIR", "processed_images")
     CLEANUP_INTERVAL_HOURS: int = os.getenv("CLEANUP_INTERVAL_HOURS", 1)
 

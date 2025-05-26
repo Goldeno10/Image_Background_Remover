@@ -47,7 +47,7 @@ async def create_task(
         raise HTTPException(413, "File too large. Maximum size is 5 MB.")
 
     # 3) Enqueue background job
-    task_id = enqueue_image_processing(background_tasks, pr, file_bytes, file.filename)
+    task_id = enqueue_image_processing(background_tasks, pr, file_bytes, file.filename, base_url=str(request.base_url))
 
     # 4) Return status URL
     status_url = str(request.base_url) + f"status/{task_id}"

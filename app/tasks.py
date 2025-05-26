@@ -54,12 +54,12 @@ def _background_task(processing_id, request: ProcessingRequest, file_bytes: byte
         redis_client.setex(str(processing_id), settings.REDIS_TTL_SECONDS, json.dumps(state))
 
         # 5) send email
-        # ok = send_notification(str(processing_id), request.email)
-        # if not ok:
-        #     # optional: update Redis with a "warning" field
-        #     state = json.loads(redis_client.get(str(processing_id)))
-        #     state["email_status"] = "failed"
-        #     redis_client.setex(str(processing_id), settings.REDIS_TTL_SECONDS, json.dumps(state))
+        ok = send_notification(str(processing_id), request.email)
+        if not ok:
+            # optional: update Redis with a "warning" field
+            state = json.loads(redis_client.get(str(processing_id)))
+            state["email_status"] = "failed"
+            redis_client.setex(str(processing_id), settings.REDIS_TTL_SECONDS, json.dumps(state))
 
     except Exception as exc:
         # mark “failed”

@@ -1,14 +1,24 @@
+"""Download API for completed tasks"""
+
 import os
-from fastapi import APIRouter, HTTPException
-from fastapi.responses import FileResponse
-from ..redis_client import redis_client
-from ..config import settings
 import json
 
-router = APIRouter(prefix="/download", tags=["download"])
+from fastapi import APIRouter, HTTPException, Depends
+from fastapi.responses import FileResponse
+from fastapi_limiter.depends import RateLimiter
 
+from ..redis_client import redis_client
+from ..config import settings
 
-@router.get("/{task_id}")
+router = APIRouter(
+    prefix="/download",
+    tags=["download"],
+)
+
+@router.get(
+    "/{task_id}",
+    dependencies=[Depends(RateLimiter(times=20, seconds=60))],
+)
 def download(task_id: str):
     raw = redis_client.get(task_id)
     if not raw:

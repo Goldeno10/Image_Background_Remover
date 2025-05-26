@@ -2,7 +2,6 @@ from rembg import remove, new_session
 from PIL import Image
 import numpy as np
 from io import BytesIO
-import torch
 from app.config import settings
 
 # Initialize sessions once
@@ -11,9 +10,9 @@ SESSIONS = {
     for name in settings.MODEL_NAMES
 }
 
-if settings.GPU_ENABLED:
-    for sess in SESSIONS.values():
-        sess = sess.to("cuda")
+# if settings.GPU_ENABLED:
+#     for sess in SESSIONS.values():
+#         sess = sess.to("cuda")
 
 
 def process_image_bytes(
@@ -30,8 +29,8 @@ def process_image_bytes(
         )
 
     session = SESSIONS.get(model_name, SESSIONS["u2net"])
-    if settings.GPU_ENABLED:
-        session = session.to("cuda")
+    # if settings.GPU_ENABLED:
+    #     session = session.to("cuda")
 
     result_np = remove(np.array(img), session=session)
     return Image.fromarray(result_np)

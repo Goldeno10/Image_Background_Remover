@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div id="status-card" class="card p-4">
+      <h2 class="card-title text-center mb-3">Status</h2>
+
+      <!-- Spinner -->
+      <div id="status-spinner" class="spinner-border" role="status">
+        <span class="visually-hidden">Processing…</span>
+      </div>
+      <p class="mt-2">We’re working on it…</p>
+
+      <!-- Error -->
+      <div id="error-msg" class="alert alert-danger mt-3 d-none"></div>
+
+      <!-- Result -->
+      <div id="result-section" class="text-center d-none">
+        <h5 class="mt-3 text-success">Done!</h5>
+        <img id="result-image" class="result-img" alt="Result">
+        <div class="mt-3">
+          <a id="download-btn" class="btn btn-primary">
+            <i class="fa-solid fa-download"></i> Download
+          </a>
+        </div>
+      </div>
+
+      <div class="text-center mt-4">
+        <a href="/" class="btn btn-info">
+          <i class="fa-solid fa-home"></i> Back to Home
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

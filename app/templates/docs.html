@@ -1,0 +1,186 @@
+{% extends "docs_base.html" %}
+{% block docs_content %}
+
+<div class="row">
+    <!-- Main content -->
+    <main class="ms-sm-auto px-md-4">
+        <section id="intro" class="pb-2">
+            <h2>Introduction</h2>
+            <p>Welcome to <strong>BG-Remover</strong>’s REST API! Effortlessly remove backgrounds from images as a
+                service.</p>
+        </section>
+
+        <section id="authentication" class="pb-2">
+            <h2>Authentication</h2>
+            <p>Currently open; no API key needed. Use responsibly!</p>
+        </section>
+
+        <section id="endpoints" class="pb-2">
+            <h2>Endpoints</h2>
+            <p>Background removal endpoints for image processing.</p>
+            <ul>
+                <li><a href="#process">POST /process</a> - Queue an image for background removal</li>
+                <li><a href="#status">GET /status/{task_id}</a> - Check processing status</li>
+                <li><a href="#download">GET /download/{task_id}</a> - Download the completed image</li>
+            </ul>
+            <p>All endpoints return JSON responses.</p>
+
+
+            <!-- POST /process -->
+            <article id="process" class="mt-4 pt-4">
+                <h3>POST /process</h3>
+                <p>Queue an image for background removal.</p>
+                <strong>Parameters (multipart/form-data):</strong>
+                <ul class="mb-3">
+                    <li><code>file</code> (file): JPG/PNG, max 5 MB</li>
+                    <li><code>email</code> (string): callback email</li>
+                    <li><code>model</code> (string): <code>u2net</code> or <code>u2netp</code></li>
+                    <li><code>output_format</code> (string): <code>png</code> or <code>jpg</code></li>
+                    <li><code>quality</code> (int): 1–100</li>
+                    <li><code>scale</code> (float): e.g. 1.0</li>
+                </ul>
+
+                <!-- ─── Tabs nav ─────────────────────────────────────────── -->
+                <ul class="nav nav-tabs" id="processTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="curl-tab" data-bs-toggle="tab" data-bs-target="#curl-pane"
+                            type="button" role="tab">cURL</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="py-tab" data-bs-toggle="tab" data-bs-target="#py-pane"
+                            type="button" role="tab">Python</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="ts-tab" data-bs-toggle="tab" data-bs-target="#ts-pane"
+                            type="button" role="tab">TypeScript</button>
+                    </li>
+                </ul>
+
+                <!-- ─── Tabs content ─────────────────────────────────────── -->
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="curl-pane" role="tabpanel">
+                        <pre class="p-0 m-0">
+                            <code class="bash" style="display: block;">
+curl -X POST "http://localhost:8000/process" \
+-F "file=@/path/to/image.png" \
+-F "email=you@example.com" \
+-F "model=u2net" \
+-F "output_format=png" \
+-F "quality=95" \
+-F "scale=1.0"
+                            </code>
+                        </pre>
+                    </div>
+
+                    <div class="tab-pane fade" id="py-pane" role="tabpanel">
+                        <pre class="p-0 m-0">
+                            <code class="python" style="display: block;">
+import requests
+
+files = {"file": open("image.png","rb")}
+data = {
+"email":"you@example.com",
+"model":"u2net",
+"output_format":"png",
+"quality":95,
+"scale":1.0
+}
+r = requests.post("http://localhost:8000/process", files=files, data=data)
+print(r.json())
+                            </code>
+                        </pre>
+                    </div>
+
+                    <div class="tab-pane fade" id="ts-pane" role="tabpanel">
+                        <pre class="p-0 m-0">
+                            <code class="typescript" style="display: block;">
+const form = new FormData();
+form.append("file", fileInput.files[0]);
+form.append("email", "you@example.com");
+form.append("model", "u2net");
+form.append("output_format", "png");
+form.append("quality", "95");
+form.append("scale", "1.0");
+
+const res = await fetch("/process", { method:"POST", body: form });
+console.log(await res.json());
+                            </code>
+                        </pre>
+                    </div>
+                </div>
+
+            </article>
+
+            <!-- GET /status -->
+            <article id="status" class="mt-4">
+                <h3>GET /status/{task_id}</h3>
+                <p>Check the processing status. Returns JSON:</p>
+                <pre><code class="json">
+{ "processing_id":"1234-…", "status":"pending" }
+        </code></pre>
+
+                <h5>curl</h5>
+                <pre><code class="bash">
+curl http://localhost:8000/status/1234-…
+        </code></pre>
+
+                <h5>Python</h5>
+                <pre><code class="python">
+resp = requests.get("http://localhost:8000/status/1234-…")
+print(resp.json())  # {"status":"processing"}
+        </code></pre>
+
+                <h5>TypeScript</h5>
+                <pre><code class="typescript">
+const res = await fetch("/status/1234-…");
+console.log(await res.json());
+        </code></pre>
+            </article>
+
+            <!-- GET /download -->
+            <article id="download" class="mt-4">
+                <h3>GET /download/{task_id}</h3>
+                <p>Download the completed image. Returns <code>200</code> & the binary.</p>
+
+                <h5>curl</h5>
+                <pre><code class="bash">
+curl -O http://localhost:8000/download/1234-…
+        </code></pre>
+
+                <h5>Python</h5>
+                <pre><code class="python">
+r = requests.get("http://localhost:8000/download/1234-…")
+with open("out.png","wb") as f:
+    f.write(r.content)
+        </code></pre>
+
+                <h5>TypeScript</h5>
+                <pre><code class="typescript">
+const r = await fetch("/download/1234-…");
+const blob = await r.blob();
+download(blob, "out.png");  // via FileSaver.js
+        </code></pre>
+            </article>
+        </section>
+
+        <section id="errors" class="pt-4 pb-2">
+            <h2>Errors</h2>
+            <ul>
+                <li><code>404</code> – Task not found/expired or file missing</li>
+                <li><code>413</code> – File too large</li>
+                <li><code>423</code> – Task not completed yet</li>
+            </ul>
+        </section>
+
+        <section id="rate-limits" class="pt-4 pb-2 mb-5">
+            <h2>Rate Limits</h2>
+            <ul>
+                <li><strong>/process</strong>: 1 per 15s, 5 per min</li>
+                <li><strong>/status</strong>: 60 per min</li>
+                <li><strong>/download</strong>: 20 per min</li>
+            </ul>
+        </section>
+    </main>
+</div>
+
+{% endblock %}

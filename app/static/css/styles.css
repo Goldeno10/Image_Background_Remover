@@ -471,3 +471,56 @@ section {
     color: var(--dark-bg) !important;
     border-radius: .25rem;
 }
+
+
+
+/* About‐page cards */
+.about-card {
+    background: var(--card-bg);
+    border: 1px solid var(--muted);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+    border-radius: .5rem;
+    transition: transform .2s;
+}
+
+.about-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Hero text color */
+.text-accent {
+    color: var(--accent) !important;
+}
+
+/* Optional: smaller lead */
+.lead {
+    font-size: 1rem;
+}
+
+
+/* about.html */
+.about-me {
+    gap: 1.5rem;
+    margin-top: 3rem;
+}
+
+.me-photo img {
+    object-fit: cover;
+}
+
+.me-bio h2 {
+    margin-bottom: .5rem;
+}
+
+.social-links a {
+    transition: color .2s;
+}
+
+.social-links a:hover {
+    color: var(--accent);
+}
+
+/* border-accent utility */
+.border-accent {
+    border-color: var(--accent) !important;
+}

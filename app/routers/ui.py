@@ -26,3 +26,7 @@ def api_docs(request: Request):
         {"request": request}
     )
 
+@router.get("/about")
+def about(request: Request):
+    return templates.TemplateResponse("about.html", {"request": request})
+

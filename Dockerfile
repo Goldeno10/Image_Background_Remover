@@ -8,11 +8,10 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 # 2) Install system deps (if you need build-tools)
 RUN apt-get update && \
-    apt-get install -y \
+    apt-get install --no-install-recommends -y \
     libgl1 \
     libglib2.0-0 \
-    wget \
-    --no-install-recommends gcc && \
+    wget && \
     rm -rf /var/lib/apt/lists/*
 
 # 3) Copy & install Python deps

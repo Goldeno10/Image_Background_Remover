@@ -1,5 +1,5 @@
-# docker-compose.yml
 version: '3.8'
+
 services:
 
   web:
@@ -9,14 +9,12 @@ services:
     container_name: bgremover_web
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     volumes:
-      - ./:/app                # optional, for live code reload
+      - ./:/app
     ports:
       - "8000:8000"
-    environment:
-      # point your app at the redis service
-      - REDIS_URL=redis://redis:6379/0
-      # FastAPI secrets etc. can go here or in a .env file
-      #- SECRET_KEY=supersecret
+    env_file:
+      - .env
+    restart: unless-stopped
     depends_on:
       - redis
 
@@ -26,15 +24,3 @@ services:
     ports:
       - "6379:6379"
     restart: unless-stopped
-
-  # -- Optional: if you have Celery tasks or RQ jobs --
-  # worker:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   container_name: bgremover_worker
-  #   command: celery -A app.worker.celery_app worker --loglevel=info
-  #   environment:
-  #     - REDIS_URL=redis://redis:6379/0
-  #   depends_on:
-  #     - redis

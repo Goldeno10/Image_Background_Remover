@@ -1,12 +1,11 @@
 import json
 import uuid
-from fastapi import BackgroundTasks, UploadFile
+from fastapi import BackgroundTasks
 from .redis_client import redis_client
-from .models import ProcessingRequest, ProcessingStatus
+from .models import ProcessingRequest
 from app.services.image_processor import process_image_bytes
 from app.services.storage import build_filepath
 from app.services.email_notifier import send_notification
-from PIL import Image
 import os
 from app.config import settings
 
@@ -15,14 +14,15 @@ def enqueue_image_processing(
     bg: BackgroundTasks,
     request: ProcessingRequest,
     file_bytes: bytes,
-    filename: str = None
+    filename: str = None,
+    base_url: str = None,
 ):
     processing_id = uuid.uuid4()
-    bg.add_task(_background_task, processing_id, request, file_bytes, filename)
+    bg.add_task(_background_task, processing_id, request, file_bytes, filename, base_url)
     return processing_id
 
 
-def _background_task(processing_id, request: ProcessingRequest, file_bytes: bytes, filename: str):
+def _background_task(processing_id, request: ProcessingRequest, file_bytes: bytes, filename: str, base_url: str = None):
     # generate a uuid if not provided
     if processing_id is None:
         processing_id = uuid.uuid4()
@@ -54,7 +54,7 @@ def _background_task(processing_id, request: ProcessingRequest, file_bytes: byte
         redis_client.setex(str(processing_id), settings.REDIS_TTL_SECONDS, json.dumps(state))
 
         # 5) send email
-        ok = send_notification(str(processing_id), request.email)
+        ok = send_notification(str(processing_id), request.email, base_url)
         if not ok:
             # optional: update Redis with a "warning" field
             state = json.loads(redis_client.get(str(processing_id)))

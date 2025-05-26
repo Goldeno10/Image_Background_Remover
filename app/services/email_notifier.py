@@ -6,7 +6,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def send_notification(processing_id: str, recipient: str) -> bool:
+def send_notification(processing_id: str, recipient: str, base_url: str = None) -> bool:
     """
     Send the “your image is ready” email with HTML formatting.
     Returns True on success, False on any failure.
@@ -16,7 +16,7 @@ def send_notification(processing_id: str, recipient: str) -> bool:
     msg["To"] = recipient
     msg["Subject"] = "Your background‐removed image is ready"
 
-    download_url = f"{settings.BASE_URL}/download/{processing_id}"
+    download_url = f"{base_url}/download/{processing_id}"
 
     html_body = f"""
     <html>

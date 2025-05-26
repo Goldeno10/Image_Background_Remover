@@ -31,6 +31,15 @@ class Settings(BaseSettings):
     DEFAULT_OUTPUT_FORMAT: str = os.getenv("DEFAULT_OUTPUT_FORMAT", "png")
     DEFAULT_QUALITY: int = os.getenv("DEFAULT_QUALITY", 95)
     DEFAULT_SCALE: float = os.getenv("DEFAULT_SCALE", 1.0)
+
+
+    ENV: str = "development"  # or "production"
+    OUTPUT_DIR: str = "./output"
+    
+    AWS_S3_BUCKET: str = "your-bucket-name"
+    AWS_REGION: str = "eu-north-1"
+    USE_S3: bool = False
+
     class Config:
         env_file = ".env"
         case_sensitive = True

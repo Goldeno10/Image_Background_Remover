@@ -1,3 +1,4 @@
+import os
 import json
 import uuid
 from fastapi import BackgroundTasks
@@ -6,7 +7,7 @@ from .models import ProcessingRequest
 from app.services.image_processor import process_image_bytes
 from app.services.storage import build_filepath
 from app.services.email_notifier import send_notification
-import os
+from app.services.s3_uploader import upload_to_s3
 from app.config import settings
 
 
@@ -44,13 +45,21 @@ def _background_task(processing_id, request: ProcessingRequest, file_bytes: byte
             result_img = result_img.convert("RGB")
             save_kwargs["quality"] = request.quality
 
-        result_img.save(filepath, **save_kwargs)
+        # result_img.save(filepath, **save_kwargs)
 
-        # 4) mark “completed”
-        state.update({
-            "status": "completed",
-            "filename": os.path.basename(filepath)
-        })
+        if settings.ENV == "production" and settings.USE_S3:
+            upload_to_s3(result_img, f"{processing_id}.{ext}", ext, save_kwargs)
+            state.update({"status": "completed", "filename": f"{processing_id}.{ext}", "s3": True})
+        else:
+            result_img.save(filepath, **save_kwargs)
+            state.update({"status": "completed", "filename": os.path.basename(filepath), "s3": False})
+
+
+        # # 4) mark “completed”
+        # state.update({
+        #     "status": "completed",
+        #     "filename": os.path.basename(filepath)
+        # })
         redis_client.setex(str(processing_id), settings.REDIS_TTL_SECONDS, json.dumps(state))
 
         # 5) send email

@@ -34,11 +34,15 @@ class Settings(BaseSettings):
 
 
     ENV: str = "production" # or "development"
-    OUTPUT_DIR: str = "./output"
     
     AWS_S3_BUCKET: str = os.getenv("AWS_S3_BUCKET", "your-s3-bucket-name")
     AWS_REGION: str = os.getenv("AWS_REGION", "eu-north-1")
-    USE_S3: bool = os.getenv("USE_S3", "false").lower() == "true"
+    AWS_USE_S3: bool = os.getenv("AWS_USE_S3", "false").lower() == "true"
+
+    AWS_S3_USER: str = os.getenv("AWS_S3_USER", "your-s3-user")
+    AWS_ACCESS_KEY: str = os.getenv("AWS_ACCESS_KEY", "your-access-key-id")
+    AWS_SECRET_ACCESS_KEY: str = os.getenv("AWS_SECRET_ACCESS_KEY", "your-secret-access-key")
+
 
     class Config:
         env_file = ".env"

@@ -24,19 +24,20 @@ def enqueue_image_processing(
 
 
 def _background_task(processing_id, request: ProcessingRequest, file_bytes: bytes, filename: str, base_url: str = None):
-    # generate a uuid if not provided
     if processing_id is None:
         processing_id = uuid.uuid4()
 
-    # 1) mark “processing”
+    public_url = None
+
+    # 1) mark as "processing"
     state = {"status": "processing", "email": request.email}
     redis_client.setex(str(processing_id), settings.REDIS_TTL_SECONDS, json.dumps(state))
 
     try:
-        # 2) do the removal
+        # 2) process image
         result_img = process_image_bytes(file_bytes, request.model, request.scale)
 
-        # 3) save
+        # 3) save image
         ext = request.output_format.lower()
         filepath = build_filepath(processing_id, ext)
 
@@ -45,33 +46,43 @@ def _background_task(processing_id, request: ProcessingRequest, file_bytes: byte
             result_img = result_img.convert("RGB")
             save_kwargs["quality"] = request.quality
 
-        # result_img.save(filepath, **save_kwargs)
-
-        if settings.ENV == "production" and settings.USE_S3:
-            upload_to_s3(result_img, f"{processing_id}.{ext}", ext, save_kwargs)
-            state.update({"status": "completed", "filename": f"{processing_id}.{ext}", "s3": True})
+        if settings.ENV == "production" and settings.AWS_USE_S3:
+            s3_filename = f"processed/{processing_id}.{ext}"
+            try:
+                public_url = upload_to_s3(result_img, s3_filename, ext, save_kwargs)
+                state.update({
+                    "status": "completed",
+                    "filename": f"{processing_id}.{ext}",
+                    "file_url": public_url,
+                    "s3": True
+                })
+            except Exception as e:
+                state.update({"status": "failed", "error": f"S3 upload failed: {str(e)}"})
+                redis_client.setex(str(processing_id), settings.REDIS_TTL_SECONDS, json.dumps(state))
+                return
         else:
             result_img.save(filepath, **save_kwargs)
-            state.update({"status": "completed", "filename": os.path.basename(filepath), "s3": False})
+            public_url = f"{base_url}/download/{processing_id}"
+            state.update({
+                "status": "completed",
+                "filename": os.path.basename(filepath),
+                "file_url": public_url,
+                "s3": False
+            })
 
-
-        # # 4) mark “completed”
-        # state.update({
-        #     "status": "completed",
-        #     "filename": os.path.basename(filepath)
-        # })
+        # 4) mark as "completed" in Redis
         redis_client.setex(str(processing_id), settings.REDIS_TTL_SECONDS, json.dumps(state))
 
-        # 5) send email
-        ok = send_notification(str(processing_id), request.email, base_url)
+        # 5) send email notification
+        ok = send_notification(request.email, public_url)
+
         if not ok:
-            # optional: update Redis with a "warning" field
             state = json.loads(redis_client.get(str(processing_id)))
             state["email_status"] = "failed"
             redis_client.setex(str(processing_id), settings.REDIS_TTL_SECONDS, json.dumps(state))
 
     except Exception as exc:
-        # mark “failed”
+        # 6) mark as "failed"
         state.update({"status": "failed", "error": str(exc)})
         redis_client.setex(str(processing_id), settings.REDIS_TTL_SECONDS, json.dumps(state))
         raise

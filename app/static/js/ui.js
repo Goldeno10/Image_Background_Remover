@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (js.status === "completed") {
                     clearInterval(check);
                     spinner.classList.add("d-none");
-                    resultImage.src = `/download/${processing_id}`;
+                    resultImage.src = js.file_url;
                     downloadBtn.href = `/download/${processing_id}`;
                     resultSection.classList.remove("d-none");
                 } else if (js.status === "failed") {
@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     errorAlert.textContent = "Processing failed.";
                     errorAlert.classList.remove("d-none");
                 }
-            }, 2000);
+            }, 4000);
         } catch (err) {
             spinner.classList.add("d-none");
             errorAlert.textContent = err.message;

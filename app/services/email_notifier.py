@@ -6,18 +6,17 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def send_notification(processing_id: str, recipient: str, base_url: str = None) -> bool:
+def send_notification( recipient: str, file_url: str = None) -> bool:
     """
     Send the “your image is ready” email with HTML formatting.
     Returns True on success, False on any failure.
     """
     msg = MIMEMultipart("alternative")
-    msg["From"] = "smtp@mailtrap.io"  # or settings.SMTP_USER
+    msg["From"] = "ibrahimmuhammad271@gmail.com" # "smtp@mailtrap.io"
     msg["To"] = recipient
     msg["Subject"] = "Your background‐removed image is ready"
 
-    download_url = f"{base_url}/download/{processing_id}"
-
+    # #add8e6
     html_body = f"""
     <html>
       <body style="font-family: Arial, sans-serif; background-color: #f0f8ff; padding: 20px; color: #333;">
@@ -26,7 +25,7 @@ def send_notification(processing_id: str, recipient: str, base_url: str = None) 
           <p>Hi there,</p>
           <p>Your image has been successfully processed using <strong>MIB Tech Background Remover</strong>.</p>
           <p>
-            <a href="{download_url}" style="display: inline-block; background-color: #add8e6; color: #ffffff; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+            <a href="{file_url}" style="display: inline-block; background-color: #2e8b57 ; color: #ffffff; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">
               👉 Download Your Image
             </a>
           </p>

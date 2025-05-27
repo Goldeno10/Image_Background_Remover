@@ -1,4 +1,7 @@
 # Background Removal Service
+<!-- add image screenshot -->
+![Screenshot of Background Removal Service UI](Screenshot.jpeg)
+
 
 A simple FastAPI microservice to remove image backgrounds asynchronously.  
 Clients upload an image and parameters, receive a `processing_id`, then poll status or download the result when ready.  

@@ -39,10 +39,10 @@ deactivate nondestructive
 if [ "${OSTYPE:-}" = "cygwin" ] || [ "${OSTYPE:-}" = "msys" ] ; then
     # transform D:\path\to\venv to /d/path/to/venv on MSYS
     # and to /cygdrive/d/path/to/venv on Cygwin
-    export VIRTUAL_ENV=$(cygpath /root/bg_remover_api/venv)
+    export VIRTUAL_ENV=$(cygpath /home/goldeno/Documents/Projects/Image_Background_Remover/venv)
 else
     # use the path as-is
-    export VIRTUAL_ENV=/root/bg_remover_api/venv
+    export VIRTUAL_ENV=/home/goldeno/Documents/Projects/Image_Background_Remover/venv
 fi
 
 _OLD_VIRTUAL_PATH="$PATH"

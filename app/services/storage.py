@@ -1,5 +1,4 @@
 import os
-from uuid import UUID
 from app.config import settings
 
 
@@ -7,11 +6,11 @@ if settings.ENV != "production" or not settings.AWS_USE_S3:
     os.makedirs(settings.OUTPUT_DIR, exist_ok=True)
 
 
-def build_filename(processing_id: UUID, ext: str) -> str:
+def build_filename(processing_id: str, ext: str) -> str:
     return f"{processing_id}.{ext}"
 
 
-def build_filepath(processing_id: UUID, ext: str) -> str:
+def build_filepath(processing_id: str, ext: str) -> str:
     """
     Returns the full file path for saving locally (used in dev mode).
     """
@@ -19,7 +18,7 @@ def build_filepath(processing_id: UUID, ext: str) -> str:
     return os.path.join(settings.OUTPUT_DIR, filename)
 
 
-def build_s3_key(processing_id: UUID, ext: str) -> str:
+def build_s3_key(processing_id: str, ext: str) -> str:
     """
     Returns the S3 key (i.e., object path) where the file should be stored in S3.
     """

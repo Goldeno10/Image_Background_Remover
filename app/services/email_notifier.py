@@ -6,7 +6,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def send_notification( recipient: str, file_url: str = None) -> bool:
+def send_notification( recipient: str, file_url: str) -> bool:
     """
     Send the “your image is ready” email with HTML formatting.
     Returns True on success, False on any failure.

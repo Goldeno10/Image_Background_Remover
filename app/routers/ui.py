@@ -7,7 +7,9 @@ from fastapi.templating import Jinja2Templates
 
 
 router = APIRouter()
+
 templates = Jinja2Templates(directory="app/templates")
+
 MAX_FILE_SIZE = 5 * 1024 * 1024  # 5 MB
 
 # create templates and register `now()`

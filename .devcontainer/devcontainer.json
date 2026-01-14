@@ -1,0 +1,23 @@
+{
+	"name": "Image Background Remover",
+	"build": {
+		"context": ".",
+		"dockerfile": "Dockerfile"
+	},
+	"features": {
+		"ghcr.io/devcontainers/features/python:1": {
+			"version": "3.11"
+		},
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {
+			"moby": false,
+			"dockerDashComposeVersion": "v2"
+		}
+	},
+	"forwardPorts": [8000],
+	"portsAttributes": {
+		"8000": {
+			"label": "Web App",
+			"onAutoForward": "notify"
+		}
+	}
+}

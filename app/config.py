@@ -26,7 +26,7 @@ class Settings(BaseSettings):
     # Model
 
     GPU_ENABLED: bool = cuda.is_available() and os.getenv("GPU_ENABLED", "false").lower() == "true"
-    MODEL_NAMES: list[str] = os.getenv("MODEL_NAMES", "u2net,u2netp,u2net_human_seg").split(",")
+    MODEL_NAMES: list[str] = os.getenv("MODEL_NAMES", "u2net, u2netp, u2net_human_seg").split(",")
     DEFAULT_MODEL: str = os.getenv("DEFAULT_MODEL", "u2net")
     ALLOWED_OUTPUT_FORMATS: list[str] = ["png", "jpg", "jpeg"]
     DEFAULT_OUTPUT_FORMAT: str = os.getenv("DEFAULT_OUTPUT_FORMAT", "png")

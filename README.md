@@ -31,6 +31,8 @@ Clients upload an image and parameters, receive a `processing_id`, then poll sta
 2. `pip install -r requirements.txt`  
 3. `uvicorn app.main:app --reload`  
 4. POST an image to `/process`, poll `/status/{id}`, then GET `/download/{id}`.
+5. docker run -d --name bgr-redis -p 6379:6379 redis:7-alpine
+
 
 ---
 
@@ -65,7 +67,7 @@ MODEL_NAMES=u2net,u2netp,u2net_human_seg
 ## Installation & Run
 
 ```bash
-git clone https://github.com/you/bg-removal-service.git
+git clone https://github.com/Goldeno10/Image_Background_Remover.git
 cd bg-removal-service
 
 # create & activate virtualenv

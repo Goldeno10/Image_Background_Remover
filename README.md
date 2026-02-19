@@ -1,6 +1,6 @@
 # Background Removal Service
 <!-- add image screenshot -->
-![Screenshot of Background Removal Service UI](Screenshot.jpeg)
+![Screenshot of Background Removal Service UI](assets/bg_remover_2.png)
 
 
 A simple FastAPI microservice to remove image backgrounds asynchronously.  
